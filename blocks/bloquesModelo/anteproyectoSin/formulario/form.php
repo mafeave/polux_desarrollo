@@ -10,6 +10,8 @@ class Formulario {
 	var $miConfigurador;
 	var $lenguaje;
 	var $miFormulario;
+	var $miSql;
+	
 	function __construct($lenguaje, $formulario, $sql) {
 		$this->miConfigurador = \Configurador::singleton ();
 		
@@ -71,7 +73,7 @@ class Formulario {
 		// ----------------INICIAR EL FORMULARIO ------------------------------------------------------------
 		$atributos ['tipoEtiqueta'] = 'inicio';
 		echo $this->miFormulario->formulario ( $atributos );
-		
+		unset ( $atributos );
 		// ---------------- SECCION: Controles del Formulario -----------------------------------------------
 		
 		// ////////////////Hidden////////////
@@ -83,6 +85,7 @@ class Formulario {
 		$atributos ["obligatorio"] = true;
 		$atributos ['marco'] = true;
 		$atributos ["etiqueta"] = "";
+		$atributos ['valor'] = '0';
 		
 		$atributos = array_merge ( $atributos, $atributosGlobales );
 		echo $this->miFormulario->campoCuadroTexto ( $atributos );
@@ -95,8 +98,8 @@ class Formulario {
 		
 		if (($matrizItems [0] [0]) != "") {
 			echo $this->miFormulario->tablaReporte ( $matrizItems );
+			unset ( $atributos );
 		} else {
-			
 			$pag = $this->miConfigurador->fabricaConexiones->crypto->codificar ( "pagina=indexPolux" );
 			?>
 <div class="canvas-contenido">
@@ -106,7 +109,7 @@ class Formulario {
 			<div class="title-msg info">Informacion</div>
 			<div style="padding: 5px 0px;">
 				<div>
-					<contenido> No existen anteproyectos actualmente asignados para
+					No existen anteproyectos actualmente asignados para
 					revision.
 					<div style="text-align: right"
 						onclick="window.location = 'index.php?data=<?php echo $pag?>';">
@@ -115,7 +118,6 @@ class Formulario {
 							type="submit" tabindex="1" value="Ir al inicio" role="button"
 							aria-disabled="false">
 					</div>
-					</contenido>
 				</div>
 			</div>
 		</div>
@@ -172,10 +174,11 @@ class Formulario {
 		
 		// Paso 1: crear el listado de variables
 		
-		// $valorCodificado = "action=" . $esteBloque ["nombre"]; // Ir pagina Funcionalidad
-		$valorCodificado = "&pagina=" . $this->miConfigurador->getVariableConfiguracion ( 'pagina' ); // Frontera mostrar formulario
+		$valorCodificado = "action=" . $esteBloque ["nombre"]; // Ir pagina Funcionalidad
+		$valorCodificado .= "&pagina=" . $this->miConfigurador->getVariableConfiguracion ( 'pagina' ); // Frontera mostrar formulario
 		$valorCodificado .= "&bloque=" . $esteBloque ['nombre'];
 		$valorCodificado .= "&bloqueGrupo=" . $esteBloque ["grupo"];
+		$valorCodificado.= "&usuario=" . $_REQUEST['usuario'];
 		$valorCodificado .= "&opcion=mostrar";
 		/**
 		 * SARA permite que los nombres de los campos sean dinámicos.
@@ -184,6 +187,7 @@ class Formulario {
 		 */
 		$valorCodificado .= "&campoSeguro=" . $_REQUEST ['tiempo'];
 		// Paso 2: codificar la cadena resultante
+		
 		$valorCodificado = $this->miConfigurador->fabricaConexiones->crypto->codificar ( $valorCodificado );
 		
 		$atributos ["id"] = "formSaraData"; // No cambiar este nombre

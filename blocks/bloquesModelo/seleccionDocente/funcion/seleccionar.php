@@ -3,8 +3,8 @@
 namespace bloquesModelo\seleccionDocente\funcion;
 
 use bloquesModelo\seleccionDocente\funcion\redireccionar;
-include_once ('redireccionar.php');
 
+include_once ('redireccionar.php');
 class Seleccionar {
 	var $miConfigurador;
 	var $lenguaje;
@@ -12,38 +12,27 @@ class Seleccionar {
 	var $miFuncion;
 	var $miSql;
 	var $conexion;
-	
 	function __construct($lenguaje, $sql) {
 		$this->miConfigurador = \Configurador::singleton ();
 		$this->miConfigurador->fabricaConexiones->setRecursoDB ( 'principal' );
 		$this->lenguaje = $lenguaje;
 		$this->miSql = $sql;
-		//$this->miFuncion = $funcion;
+		// $this->miFuncion = $funcion;
 	}
-	
 	function procesarFormulario() {
+		$esteBloque = $this->miConfigurador->getVariableConfiguracion ( "esteBloque" );
 		
-		$esteBloque = $this->miConfigurador->getVariableConfiguracion("esteBloque");
-		
-		$rutaBloque = $this->miConfigurador->getVariableConfiguracion("raizDocumento") . "/blocks/bloquesModelo/";
+		$rutaBloque = $this->miConfigurador->getVariableConfiguracion ( "raizDocumento" ) . "/blocks/bloquesModelo/";
 		$rutaBloque .= $esteBloque ['nombre'];
 		
-		$host = $this->miConfigurador->getVariableConfiguracion("host") . $this->miConfigurador->getVariableConfiguracion("site") . "/blocks/bloquesModelo/registrarAnteproyecto/" . $esteBloque ['nombre'];
+		$host = $this->miConfigurador->getVariableConfiguracion ( "host" ) . $this->miConfigurador->getVariableConfiguracion ( "site" ) . "/blocks/bloquesModelo/registrarAnteproyecto/" . $esteBloque ['nombre'];
 		
 		// Aquí va la lógica de procesamiento
 		
-		switch ($_REQUEST['pagina']){
-			case 'anteDirigidos':
-				redireccion::redireccionar ('dirigidos');
-				exit ();
-				break;
-			case 'anteproyectoAsignadoRevision':
-				redireccion::redireccionar ('revision');
-				exit ();
-				break;
-		}
+		redireccion::redireccionar ( $_REQUEST ['pagina'] );
+		exit ();
+
 	}
-	
 	function resetForm() {
 		foreach ( $_REQUEST as $clave => $valor ) {
 			

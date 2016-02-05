@@ -16,7 +16,7 @@ class Sqlbanner extends sql {
 	function __construct() {
 		$this->miConfigurador = Configurador::singleton ();
 	}
-	function cadena_sql($tipo, $variable = "") {
+	function getCadenaSql($tipo, $variable = "") {
 		
 		/**
 		 * 1.
@@ -142,6 +142,17 @@ class Sqlbanner extends sql {
 				$cadenaSql .= $prefijo . "tempFormulario ";
 				$cadenaSql .= "WHERE ";
 				$cadenaSql .= "id_sesion='" . $idSesion . "'";
+				break;
+			
+			case "buscarDatos" :
+				$cadenaSql = "SELECT ";
+				$cadenaSql .= "nombre || ' ' || apellido as NOMBRE, ";
+				$cadenaSql .= "correo as EMAIL ";
+				$cadenaSql .= "FROM ";
+				$cadenaSql .= "polux_usuario ";
+				$cadenaSql .= "WHERE ";
+				$cadenaSql .= "id_usuario='" . $variable . "'";
+// 				echo $cadenaSql;
 				break;
 		}
 		

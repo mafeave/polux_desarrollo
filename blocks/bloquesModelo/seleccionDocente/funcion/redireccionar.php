@@ -11,31 +11,10 @@ class redireccion {
 		$miConfigurador = \Configurador::singleton ();
 		$miPaginaActual = $miConfigurador->getVariableConfiguracion ( "pagina" );
 		
-		switch ($opcion) {
-			
-			case "opcion1" :
-				
-				$variable = 'pagina=segundaPagina';
-				$variable .= '&variable' . $valor;
-				break;
-			
-			case "dirigidos" :
-				$variable = "pagina=anteDirigidos";
-				$variable .= '&variable=' . $_REQUEST ["docente"];
-				// $variable .= "&opcion=mensaje";
-				// $variable .= "&mensaje=confirma";
-				break;
-			
-			case "revision" :
-				$variable = "pagina=anteproyectoAsignadoRevision";
-				$variable .= '&variable=' . $_REQUEST ["docente"];
-				// $variable .= "&opcion=mensaje";
-				// $variable .= "&mensaje=confirma";
-				break;
-			
-			default :
-				$variable = '';
-		}
+		$variable = "pagina=" . $opcion;
+		$variable .= '&variable=' . $_REQUEST ["docente"];
+		$variable .= '&usuario=' . $_REQUEST ["usuario"];
+		
 		foreach ( $_REQUEST as $clave => $valor ) {
 			unset ( $_REQUEST [$clave] );
 		}
@@ -44,7 +23,7 @@ class redireccion {
 		
 		$enlace = $miConfigurador->configuracion ['enlace'];
 		var_dump ( $variable );
-		var_dump($_REQUEST);
+		var_dump ( $_REQUEST );
 		$variable = $miConfigurador->fabricaConexiones->crypto->codificar ( $variable );
 		$_REQUEST [$enlace] = $enlace . '=' . $variable;
 		$redireccion = $url . $_REQUEST [$enlace];

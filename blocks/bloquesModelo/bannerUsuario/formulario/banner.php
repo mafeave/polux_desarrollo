@@ -10,8 +10,8 @@ class Formulario {
 	var $miConfigurador;
 	var $lenguaje;
 	var $miFormulario;
-	var $miSql;
-	function __construct($lenguaje, $formulario) {
+	var $miSesion;
+	function __construct($lenguaje, $formulario, $sql) {
 		$this->miConfigurador = \Configurador::singleton ();
 		
 		$this->miConfigurador->fabricaConexiones->setRecursoDB ( 'principal' );
@@ -19,6 +19,10 @@ class Formulario {
 		$this->lenguaje = $lenguaje;
 		
 		$this->miFormulario = $formulario;
+		
+		$this->miSql = $sql;
+		
+		$this->miSesion = \Sesion::singleton ();
 	}
 	function formulario() {
 		
@@ -39,6 +43,9 @@ class Formulario {
 		$rutaBloque = $this->miConfigurador->getVariableConfiguracion ( "host" );
 		$rutaBloque .= $this->miConfigurador->getVariableConfiguracion ( "site" ) . "/blocks/";
 		$rutaBloque .= $esteBloque ['grupo'] . '/' . $esteBloque ['nombre'];
+		
+		$conexion = 'estructura';
+		$esteRecurso = $this->miConfigurador->fabricaConexiones->getRecursoDB ( $conexion );
 		
 		$esteCampo = $esteBloque ['nombre'];
 		$atributos ['id'] = $esteCampo;
@@ -84,6 +91,22 @@ class Formulario {
 		echo $this->miFormulario->division ( "inicio", $atributos );
 		unset ( $atributos );
 		
+		$usuario = $this->miSesion->getSesionUsuarioId ();
+		var_dump ( $_REQUEST );
+		if (! isset ( $_REQUEST ['usuario'] )) {
+			if ($usuario) {
+				$_REQUEST ['usuario'] = $usuario;
+			} else {
+				if (isset ( $_REQUEST ['registro'] )) {
+					$_REQUEST ['usuario'] = $_REQUEST ['registro'];
+				} else {
+					$_REQUEST ['usuario'] = "0";
+				}
+			}
+		}
+		$atributos ['cadena_sql'] = $this->miSql->getCadenaSql ( "buscarDatos", $_REQUEST ['usuario'] );
+		$matrizItems = $esteRecurso->ejecutarAcceso ( $atributos ['cadena_sql'], "busqueda" );
+		// var_dump($matrizItems);
 		// ---------------- CONTROL: Campo de Texto Funcionario--------------------------------------------------------
 		
 		$esteCampo = 'usuario';
@@ -91,7 +114,7 @@ class Formulario {
 		$atributos ["estilo"] = $esteCampo;
 		$atributos ['columnas'] = 1;
 		$atributos ["estilo"] = $esteCampo;
-		$atributos ['texto'] = 'Usuario: '; // Aqui se deberealizar la consulta para mostrar el usuario del sistema.
+		$atributos ['texto'] = 'Usuario: ' . $_REQUEST ['usuario']; // Aqui se deberealizar la consulta para mostrar el usuario del sistema.
 		$atributos ['tabIndex'] = $tab ++;
 		echo $this->miFormulario->campoTexto ( $atributos );
 		unset ( $atributos );
@@ -105,7 +128,7 @@ class Formulario {
 		$atributos ["estilo"] = $esteCampo;
 		$atributos ['columnas'] = 1;
 		$atributos ["estilo"] = $esteCampo;
-		$atributos ['texto'] = 'E-mail:'; // Aqui se deberealizar la consulta para mostrar el usuario del sistema.
+		$atributos ['texto'] = 'E-mail: ' . $matrizItems [0] [1]; // Aqui se deberealizar la consulta para mostrar el usuario del sistema.
 		$atributos ['tabIndex'] = $tab ++;
 		echo $this->miFormulario->campoTexto ( $atributos );
 		unset ( $atributos );
@@ -137,7 +160,7 @@ class Formulario {
 		$atributos ["estilo"] = $esteCampo;
 		$atributos ['columnas'] = 1;
 		$atributos ["estilo"] = $esteCampo;
-		$atributos ['texto'] = 'Bienvenido(a): ';
+		$atributos ['texto'] = 'Bienvenido(a): ' . $matrizItems [0] [0];
 		$atributos ['tabIndex'] = $tab ++;
 		echo $this->miFormulario->campoTexto ( $atributos );
 		unset ( $atributos );
@@ -159,7 +182,7 @@ class Formulario {
 	}
 }
 
-$miFormulario = new Formulario ( $this->lenguaje, $this->miFormulario );
+$miFormulario = new Formulario ( $this->lenguaje, $this->miFormulario, $this->sql );
 
 $miFormulario->formulario ();
 

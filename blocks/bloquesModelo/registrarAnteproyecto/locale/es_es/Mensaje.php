@@ -28,12 +28,13 @@ $this->idioma["observacionesTitulo"]="Observaciones del anteproyecto";
 $this->idioma["botonIngresar"]="Ingresar";
 $this->idioma["botonAceptar"]="Aceptar";
 $this->idioma["botonCancelar"]="Cancelar";
+
 $this->idioma["noDefinido"]="No definido";
 $this->idioma["botonIngresar"]="Ingresar";
 $this->idioma["botonAgregar"]="Agregar";
 $this->idioma["botonCrear"]="Crear anteproyecto";
 
-$this->idioma["mensajeRegistro"]="Anteproyecto registrado";
+$this->idioma["mensajeRegistro"]="Anteproyecto creado";
 $this->idioma["mensajeError"]="Error al crear el anteproyecto";
 $this->idioma["continuar"]="Continuar";
 

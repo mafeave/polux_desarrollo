@@ -60,6 +60,10 @@ class Div extends HtmlBase {
             $this->cadenaHTML .= "id='" . $this->atributos ["id"] . "' ";
             
             $this->cadenaHTML .= ">\n";
+            
+            if (isset($this->atributos[self::MENSAJE])) {
+            	$this->cadenaHTML .= $this->atributos[self::MENSAJE];
+            }
         } else {
             
             $this->cadenaHTML .= "\n</div>\n";
