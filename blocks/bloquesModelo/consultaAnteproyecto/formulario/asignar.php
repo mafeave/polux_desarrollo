@@ -1,6 +1,6 @@
 <?php
 
-namespace bloquesModelo\consutaAnteproyecto\formulario;
+namespace bloquesModelo\consultaAnteproyecto\formulario;
 
 if (! isset ( $GLOBALS ["autorizado"] )) {
 	include ("../index.php");
@@ -143,6 +143,7 @@ class Formulario {
 		$atributos ['tamanno'] = 'Enorme';
 		$atributos ['linea'] = 'true';
 		echo $this->miFormulario->campoMensaje ( $atributos );
+		unset ( $atributos );
 		
 		/*
 		 * $esteCampo = "marcoDatos";
